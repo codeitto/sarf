@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="صرف هو تطبيق مجاني لإدارة الميزانية الشخصية يعمل بالكامل داخل المتصفح، بدون تسجيل دخول، وبدون إرسال بياناتك إلى أي خادم."
+    />
+    <meta name="theme-color" content="#2563eb" />
+    <title>صرف | إدارة الميزانية الشخصية</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+    <link rel="stylesheet" href="style.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark">💰</div>
+          <div>
+            <p class="eyebrow">لوحة تحكم مالية شخصية</p>
+            <h1>صرف</h1>
+            <p class="subtitle">بياناتك لا تغادر جهازك أبدًا.</p>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <button id="themeToggle" class="icon-btn" aria-label="تبديل الوضع">🌙</button>
+          <button id="openTransactionModal" class="primary-btn">+ إضافة عملية</button>
+        </div>
+      </header>
+
+      <main class="dashboard">
+        <section class="hero-card card">
+          <div>
+            <p class="eyebrow">الرصيد الحالي</p>
+            <h2 id="balanceValue">0 د.ج</h2>
+            <p id="balanceHint" class="muted">أول خطوة نحو تحكم أفضل في أموالك.</p>
+          </div>
+          <div class="hero-actions">
+            <button id="exportJsonBtn" class="secondary-btn">تصدير JSON</button>
+            <button id="exportCsvBtn" class="secondary-btn">تصدير CSV</button>
+            <label class="secondary-btn file-label">
+              استيراد JSON
+              <input id="importFileInput" type="file" accept="application/json" hidden />
+            </label>
+          </div>
+        </section>
+
+        <section class="stats-grid" aria-label="ملخص مالي">
+          <article class="stat-card card">
+            <p>إجمالي الدخل</p>
+            <strong id="incomeValue">0</strong>
+          </article>
+          <article class="stat-card card">
+            <p>إجمالي المصروفات</p>
+            <strong id="expenseValue">0</strong>
+          </article>
+          <article class="stat-card card">
+            <p>المتبقي</p>
+            <strong id="remainingValue">0</strong>
+          </article>
+          <article class="stat-card card">
+            <p>نسبة الالتزام بالميزانية</p>
+            <strong id="budgetRatioValue">0%</strong>
+          </article>
+        </section>
+
+        <section class="budget-grid">
+          <article class="card budget-card">
+            <div class="section-heading">
+              <h3>الميزانية الشهرية</h3>
+              <button id="editBudgetBtn" class="text-btn">تعديل</button>
+            </div>
+            <div class="budget-summary">
+              <div>
+                <p class="muted">الميزانية</p>
+                <strong id="budgetValue">0 د.ج</strong>
+              </div>
+              <div>
+                <p class="muted">المصروف الحالي</p>
+                <strong id="budgetSpentValue">0 د.ج</strong>
+              </div>
+              <div>
+                <p class="muted">المتبقي</p>
+                <strong id="budgetRemainingValue">0 د.ج</strong>
+              </div>
+            </div>
+            <div class="progress-bar" role="progressbar" aria-label="معدل الالتزام بالميزانية" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <div id="budgetProgressBar"></div>
+            </div>
+            <p id="budgetAlert" class="budget-alert"></p>
+          </article>
+
+          <article class="card settings-card">
+            <div class="section-heading">
+              <h3>الإعدادات</h3>
+            </div>
+            <label class="field">
+              <span>العملة الافتراضية</span>
+              <select id="displayCurrencySelect">
+                <option value="DZD">دينار جزائري (DZD)</option>
+                <option value="USD">دولار أمريكي (USD)</option>
+                <option value="EUR">يورو (EUR)</option>
+                <option value="SAR">ريال سعودي (SAR)</option>
+                <option value="AED">درهم إماراتي (AED)</option>
+                <option value="QAR">ريال قطري (QAR)</option>
+                <option value="GBP">جنيه إسترليني (GBP)</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>الاسم (اختياري)</span>
+              <input id="userNameInput" type="text" placeholder="مثال: سارة" />
+            </label>
+            <div class="privacy-box">
+              <strong>الخصوصية</strong>
+              <p>جميع بياناتك محفوظة على جهازك فقط ولا يتم إرسال أي معلومات إلى أي خادم.</p>
+            </div>
+            <button id="resetDataBtn" class="danger-btn">مسح جميع البيانات</button>
+          </article>
+        </section>
+
+        <section class="card insights-section">
+          <div class="section-heading">
+            <h3>الرؤى المالية</h3>
+            <span id="healthScore" class="health-pill">—</span>
+          </div>
+          <div id="insightsGrid" class="insights-grid"></div>
+        </section>
+
+        <section class="card donations-section">
+          <div class="section-heading">
+            <h3>دعم المشروع</h3>
+          </div>
+          <p class="donation-copy">
+            إذا أعجبك مشروع "صرف" وساعدك في إدارة أموالك، يمكنك دعم تطويره أو إظهار الإعجاب عبر GitHub.
+          </p>
+          <div class="support-actions">
+            <a class="primary-btn support-link" href="https://github.com/" target="_blank" rel="noreferrer">⭐ نجمة على GitHub</a>
+            <button id="openSupportModalBtn" class="secondary-btn" type="button">❤️ ادعم المشروع</button>
+          </div>
+        </section>
+
+        <section class="card charts-section">
+          <div class="section-heading">
+            <h3>الرسوم البيانية</h3>
+          </div>
+          <div class="chart-grid">
+            <div class="chart-card">
+              <h4>الدخل مقابل المصروف</h4>
+              <canvas id="incomeExpenseChart"></canvas>
+            </div>
+            <div class="chart-card">
+              <h4>المصروف حسب الفئة</h4>
+              <canvas id="categoryChart"></canvas>
+            </div>
+            <div class="chart-card wide">
+              <h4>تطور المصروف شهرياً</h4>
+              <canvas id="monthlyChart"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <section class="card transactions-card">
+          <div class="section-heading">
+            <h3>العمليات</h3>
+            <div class="filters-row">
+              <input id="searchInput" type="search" placeholder="بحث..." aria-label="البحث في العمليات" />
+              <select id="typeFilter" aria-label="فلترة حسب النوع">
+                <option value="all">الكل</option>
+                <option value="income">دخل</option>
+                <option value="expense">مصروف</option>
+              </select>
+              <select id="categoryFilter" aria-label="فلترة حسب الفئة"></select>
+              <select id="monthFilter" aria-label="فلترة حسب الشهر">
+                <option value="all">كل الأشهر</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>التاريخ</th>
+                  <th>النوع</th>
+                  <th>الفئة</th>
+                  <th>المبلغ</th>
+                  <th>ملاحظات</th>
+                  <th>الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody id="transactionsTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="card categories-card">
+          <div class="section-heading">
+            <h3>الفئات</h3>
+          </div>
+          <form id="categoryForm" class="inline-form">
+            <input id="newCategoryInput" type="text" placeholder="إضافة فئة جديدة" required />
+            <button type="submit" class="primary-btn">إضافة</button>
+          </form>
+          <div id="categoriesList" class="category-list"></div>
+        </section>
+      </main>
+    </div>
+
+    <div id="supportModal" class="modal hidden" aria-hidden="true">
+      <div class="modal-card support-modal-card" role="dialog" aria-modal="true" aria-labelledby="supportModalTitle">
+        <div class="section-heading">
+          <h3 id="supportModalTitle">طرق الدعم</h3>
+          <button id="closeSupportModalBtn" class="icon-btn" aria-label="إغلاق">✕</button>
+        </div>
+        <p class="donation-copy">
+          اختر الطريقة الأنسب لك، وسنفتح لك الصفحة المناسبة مباشرة.
+        </p>
+        <div class="support-options">
+          <a class="support-card" href="https://github.com/sponsors" target="_blank" rel="noreferrer">GitHub Sponsors</a>
+          <a class="support-card" href="https://www.buymeacoffee.com/" target="_blank" rel="noreferrer">Buy Me a Coffee</a>
+          <a class="support-card" href="https://ko-fi.com/" target="_blank" rel="noreferrer">Ko-fi</a>
+        </div>
+        <div class="support-crypto">
+          <h4>دعم بالعملات الرقمية</h4>
+          <p>يمكنك مسح رمز QR أو نسخ العنوان من الصفحة الخاصة بالدعم.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="transactionModal" class="modal hidden" aria-hidden="true">
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="section-heading">
+          <h3 id="modalTitle">إضافة عملية</h3>
+          <button id="closeModalBtn" class="icon-btn" aria-label="إغلاق">✕</button>
+        </div>
+        <form id="transactionForm" class="stack-form">
+          <input id="transactionId" type="hidden" />
+          <label class="field">
+            <span>النوع</span>
+            <select id="transactionType" required>
+              <option value="income">دخل</option>
+              <option value="expense">مصروف</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>المبلغ</span>
+            <input id="transactionAmount" type="number" min="0" step="0.01" required autofocus />
+          </label>
+          <label class="field">
+            <span>العملة</span>
+            <select id="transactionCurrency">
+              <option value="DZD">دينار جزائري (DZD)</option>
+              <option value="USD">دولار أمريكي (USD)</option>
+              <option value="EUR">يورو (EUR)</option>
+              <option value="SAR">ريال سعودي (SAR)</option>
+              <option value="AED">درهم إماراتي (AED)</option>
+              <option value="QAR">ريال قطري (QAR)</option>
+              <option value="GBP">جنيه إسترليني (GBP)</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>الفئة</span>
+            <select id="transactionCategory" required></select>
+          </label>
+          <label class="field">
+            <span>التاريخ</span>
+            <input id="transactionDate" type="date" required />
+          </label>
+          <label class="field">
+            <span>ملاحظات</span>
+            <textarea id="transactionNotes" rows="3" placeholder="أضف ملاحظة..."></textarea>
+          </label>
+          <div class="modal-actions">
+            <button type="submit" class="primary-btn">حفظ</button>
+            <button type="button" id="cancelModalBtn" class="secondary-btn">إلغاء</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+    <script src="script.js" defer></script>
+  </body>
+</html>
