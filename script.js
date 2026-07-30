@@ -77,9 +77,6 @@ function cacheDomElements() {
   els.toastContainer = document.getElementById("toastContainer");
   els.insightsGrid = document.getElementById("insightsGrid");
   els.healthScore = document.getElementById("healthScore");
-  els.openSupportModalBtn = document.getElementById("openSupportModalBtn");
-  els.supportModal = document.getElementById("supportModal");
-  els.closeSupportModalBtn = document.getElementById("closeSupportModalBtn");
 }
 
 function bindEvents() {
@@ -114,17 +111,6 @@ function bindEvents() {
   });
   els.transactionsTableBody.addEventListener("click", handleTransactionTableClick);
   els.categoriesList.addEventListener("click", handleCategoryListClick);
-  if (els.openSupportModalBtn) {
-    els.openSupportModalBtn.addEventListener("click", openSupportModal);
-  }
-  if (els.closeSupportModalBtn) {
-    els.closeSupportModalBtn.addEventListener("click", closeSupportModal);
-  }
-  if (els.supportModal) {
-    els.supportModal.addEventListener("click", (event) => {
-      if (event.target === els.supportModal) closeSupportModal();
-    });
-  }
 }
 
 function cloneData(value) {
@@ -203,20 +189,6 @@ function applyTheme() {
   document.body.setAttribute("data-theme", state.theme || "light");
   if (els.themeToggle) {
     els.themeToggle.textContent = state.theme === "dark" ? "☀️" : "🌙";
-  }
-}
-
-function openSupportModal() {
-  if (els.supportModal) {
-    els.supportModal.classList.remove("hidden");
-    els.supportModal.setAttribute("aria-hidden", "false");
-  }
-}
-
-function closeSupportModal() {
-  if (els.supportModal) {
-    els.supportModal.classList.add("hidden");
-    els.supportModal.setAttribute("aria-hidden", "true");
   }
 }
 
