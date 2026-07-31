@@ -46,6 +46,7 @@ function cacheDomElements() {
   els.budgetAlert = document.getElementById("budgetAlert");
   els.themeToggle = document.getElementById("themeToggle");
   els.openTransactionModal = document.getElementById("openTransactionModal");
+  els.openTransactionModalInline = document.getElementById("openTransactionModalInline");
   els.transactionModal = document.getElementById("transactionModal");
   els.closeModalBtn = document.getElementById("closeModalBtn");
   els.cancelModalBtn = document.getElementById("cancelModalBtn");
@@ -82,6 +83,9 @@ function cacheDomElements() {
 function bindEvents() {
   els.themeToggle.addEventListener("click", toggleTheme);
   els.openTransactionModal.addEventListener("click", () => openTransactionModal());
+  if (els.openTransactionModalInline) {
+    els.openTransactionModalInline.addEventListener("click", () => openTransactionModal());
+  }
   els.closeModalBtn.addEventListener("click", closeTransactionModal);
   els.cancelModalBtn.addEventListener("click", closeTransactionModal);
   els.transactionForm.addEventListener("submit", handleTransactionSubmit);
