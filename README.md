@@ -49,11 +49,15 @@ http://127.0.0.1:8000/
 
 إذا كنت ترغب في دعم تطوير هذا المشروع، يمكنك استخدام إحدى طرق الدفع التالية. هذا القسم موجود في المستودع فقط حتى يبقى موقع التطبيق نظيفًا:
 
-- **RedotPay**: رمز QR أو عنوان الدفع 
-- **Binance Pay**: رمز QR أو عنوان المحفظة.
-- **Monero (Cake Wallet)**: رمز QR أو عنوان محفظة Monero.
+- RedotPay: رمز QR أو عنوان الدفع 
+- Binance Pay: رمز QR أو عنوان المحفظة.
+- Monero (Cake Wallet): رمز QR أو عنوان محفظة Monero.
 
-![*RedotPay**: رمز QR](redotpay-qr.jpg)
+![RedotPay: رمز QR](redotpay-qr.jpg)
+
+![Binance Pay: رمز QR أو عنوان المحفظة](binancepay-qr.jpg)
+
+![Monero (Cake Wallet): رمز QR أو عنوان محفظة Monero](monero-qr.jpg)
 
 ## Roadmap
 
